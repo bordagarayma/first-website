@@ -1,42 +1,120 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8" />
+    <title>Maria Bordagaray</title>
+
+    <!-- D3.js from CDN -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+      /* Optional: basic chart styling (can move to styles.css) */
+      #chart {
+        max-width: 500px;
+        margin-top: 20px;
+      }
+      .axis text {
+        font-size: 16px;
+      }
+      .axis path,
+      .axis line {
+        shape-rendering: crispEdges;
+      }
+    </style>
   </head>
-<body>
-<header>
-    <h1>Maria Bordagaray</h1>
-    <p>Bienvenido a mi página</p>
-</header>
-<main>
-<p>Business Intelligence & Strategy Expert</p>
-<ul>
-  <li>roller skating</li>
-  <li>drawing/painting</li>
-  <li>dancing</li>
-</ul>
 
-<b>Click me</b>
+  <body>
+    <header>
+      <h1>Maria Bordagaray</h1>
+      <p>Bienvenido a mi página</p>
+    </header>
 
-<ol>
-  <li>The Godfather</li>
-  <li>Cinema Paradiso</li>
-  <li>The Bear</li>
+    <main>
+      <p>Business Intelligence & Strategy Expert</p>
+      <ul>
+        <li>roller skating</li>
+        <li>drawing/painting</li>
+        <li>dancing</li>
+      </ul>
 
+      <b>Click me</b>
 
-</ol>
+      <ol>
+        <li>The Godfather</li>
+        <li>Cinema Paradiso</li>
+        <li>The Bear</li>
+      </ol>
 
+      <a href="https://www.google.com">Ir a Google</a>
 
-<a href="https://www.google.com">Ir a Google</a>
-<img src="Gemini_Generated_Image_kf9w96kf9w96kf9w.png" 
+      <img
+        src="Gemini_Generated_Image_kf9w96kf9w96kf9w.png"
+        alt="Myself"
+      />
 
+      <!-- Chart container -->
+      <h2>Bar chart</h2>
+      <div id="chart"></div>
+    </main>
 
-alt="Myself">
+    <footer>
+      <p>© 2026</p>
+    </footer>
 
-</main>
-<footer>
-    <p>© 2026</p>
-</footer>
-</body>
+    <script>
+      const data = [
+        { name: "A", value: 1 },
+        { name: "B", value: 5 },
+        { name: "C", value: 8 },
+        { name: "D", value: 10 }
+      ];
+
+      const margin = { top: 80, right: 40, bottom: 40, left: 40 };
+      const width = 700 - margin.left - margin.right;
+      const height = 350 - margin.top - margin.bottom;
+
+      const svg = d3
+        .select("#chart")
+        .append("svg")
+        .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const x = d3
+        .scaleBand()
+        .domain(data.map(d => d.name))
+        .range([0, width])
+        .padding(0.2);
+
+      const y = d3
+        .scaleLinear()
+        .domain([0, d3.max(data, d => d.value)])
+        .nice()
+        .range([height, 0]);
+
+      // Bars
+      svg
+        .selectAll("rect")
+        .data(data)
+        .join("rect")
+        .attr("x", d => x(d.name))
+        .attr("y", d => y(d.value))
+        .attr("width", x.bandwidth())
+        .attr("height", d => height - y(d.value));
+
+      // X axis
+      svg
+        .append("g")
+        .attr("class", "axis")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x));
+
+      // Y axis
+      svg
+        .append("g")
+        .attr("class", "axis")
+        .call(d3.axisLeft(y).ticks(5));
+    </script>
+  </body>
 </html>
